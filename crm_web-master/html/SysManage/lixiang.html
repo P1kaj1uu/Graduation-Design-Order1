@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>立项管理</title>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <script src="../../layui/layui.js"></script>
+    <style>
+        #saveOrUpdateDiv {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: none;" id="saveOrUpdateDiv">
+        <form class="layui-form" action="" lay-filter="dataFrm" id="dataFrm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">竞赛名称</label>
+                <div class="layui-input-block">
+                    <input style="width: 250px" type="text" name="name" required="" lay-verify="required"
+                        placeholder="请输入竞赛名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">组赛单位</label>
+                <div class="layui-input-block">
+                    <input style="width: 250px" type="text" name="company" required="" lay-verify="required"
+                        placeholder="请输入组赛单位" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">赛制类型</label>
+                <!-- <div class="layui-input-block">
+                    <input style="width: 250px" type="number" name="type" required="" lay-verify="required" placeholder="请输入赛制类型" autocomplete="off" class="layui-input">
+                </div> -->
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="1" title="个人赛">
+                    <div class="layui-unselect layui-form-radio layui-form-radioed"><i
+                            class="layui-anim layui-icon"></i>
+                        <div>个人赛</div>
+                    </div>
+                    <input type="radio" name="type" value="2" title="团体赛">
+                    <div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i>
+                        <div>团体赛</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">负责人</label>
+                <div class="layui-input-block">
+                    <input style="width: 250px" type="text" name="person" required="" lay-verify="required"
+                        placeholder="请输入负责人" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input style="width: 250px" type="text" name="phone" required="" lay-verify="required"
+                        placeholder="请输入电话" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始日期</label>
+                <div class="layui-input-block">
+                    <input style="width: 250px" type="date" name="start" required="" lay-verify="required"
+                        placeholder="yyyy/MM/dd" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">结束日期</label>
+                <div class="layui-input-block">
+                    <input style="width: 250px" type="date" name="end" required="" lay-verify="required"
+                        placeholder="yyyy/MM/dd" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="doSubmit">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="box">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <h1 style="color: #1E9FFF;"><strong>立项管理</strong></h1>
+            </div>
+
+            <div class="" style="margin: 10px 10px 10px 10px;">
+                <fieldset class="fieldset" style="border: 1px solid darkgray;">
+                    <legend style="font-size: large;">搜索信息</legend>
+                    <from action="${pageContext.request.contextPath}/item/moselect" methond="post">
+                        <div style="margin: 10px 10px 10px 10px">
+                            <div class="layui-form layui-form-pane">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">关键字</label>
+                                        <div class="layui-input-inline">
+                                            <input id="keyword" type="text" name="name" id="demoReload"
+                                                autocomplete="off" class="layui-input" placeholder="请输入竞赛名称或负责人">
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="layui-btn" id="searchBtn" data-type="reload"><i
+                                            class="layui-icon"></i> 搜 索</button>
+                                    <div class="layui-inline">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </from>
+                </fieldset>
+            </div>
+
+            <div class="layui-card-body">
+                <table class="layui-table" id="table" lay-filter="test"></table>
+            </div>
+
+            <div id="pageDemo" style="text-align: center"></div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="insert">新增</button>
+        </div>
+    </script>
+
+    <!-- 行工具栏 -->
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script>
+
+        //声明要使用的layUI组件（全局）
+        layui.use(["table", "form", "laypage"], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var $ = layui.jquery;
+            var laypage = layui.laypage;
+
+            $.ajaxSetup({
+                // 发送cookie
+                xhrFields: {
+                    withCredentials: true
+                }
+            });
+            //前端接口（URL）接受后端数据进行数据表格的渲染
+
+            var tableData = []
+            function getTableData(data) {
+                $.ajax({
+                    type: "get",
+                    url: 'http://localhost:8888/item/queryPage',
+                    data: data,
+                    success: function (res) {
+                        if (res.data == null) {
+                            layer.msg(res.msg, { icon: 4 });
+                            return
+                        }
+                        tableData = res.data.data
+                        console.log("res", res)
+                        console.log("tableData", tableData)
+                        //前端接口（URL）接受后端数据进行数据表格的渲染
+                        var tableIns = table.render({
+                            elem: '#table',
+                            toolbar: '#toolbarDemo',
+                            data: tableData,
+                            //分页
+                            parseData: function () { //res 即为原始返回的数据
+                                return {
+                                    "code": 0, //解析接口状态
+                                    "msg": res.data.msg, //解析提示文本
+                                    "count": res.data.count, //解析数据长度
+                                    "data": res.data.data //解析数据列表
+                                };
+                            },
+                            //设置表头
+                            cols: [[
+                                { field: 'zizeng', title: '序号', width: 80, type: 'numbers' },
+                                { field: 'id', title: '竞赛id', sort: true },
+                                { field: 'name', title: '竞赛名称' },
+                                {
+                                    field: 'type', title: '赛制类型', templet: function (data) {
+                                        if (data.type == 1) {
+                                            return '个人赛'
+                                        } else if (data.type == 2) {
+                                            return '团体赛'
+                                        }
+                                    }
+                                },
+                                { field: 'company', title: '组赛单位' },
+                                { field: 'person', title: '负责人' },
+                                { field: 'phone', title: '电话' },
+                                { field: 'start', title: '开始日期' },
+                                { field: 'end', title: '结束日期' },
+                                {
+                                    field: 'status', title: '审核状态', templet: function (data) {
+                                        if (data.status == 0) {
+                                            return '未审核'
+                                        } else if (data.status == 1) {
+                                            return '同意'
+                                        } else if (data.status == 2) {
+                                            return '拒绝'
+                                        }
+                                    }
+                                },
+                                { field: '操作', title: '操作', toolbar: '#barDemo', fixed: 'right' }
+                            ]],
+                            page: {
+                                layout: ['prev', 'page', 'next', 'count', 'limit', 'skip']//,'limit','skip'
+                                , page: function (res) {
+                                    return res.page
+                                } //获取currentPage
+                                // ,limit:function(res){
+                                //     return res.limit
+                                // }//获取pageSize
+                                , groups: 10 //最多显示几个跳页按钮
+                                , first: true //显示首页
+                                , last: true  //显示尾页
+                            }
+
+                        });
+                    }
+                })
+            }
+
+            $(document).on('click', '#searchBtn', function (data) {
+                var data = { keyword: $("#keyword").val(), type: $("#typeSelect").val() }
+                getTableData(data)
+            })
+            getTableData();
+
+
+
+            //头部工具栏监听事件
+            table.on('toolbar(test)', function (obj) {
+                //打印事件名
+                console.log(obj);
+                var checkStatus = table.checkStatus(obj.config.id);
+                console.log(checkStatus);
+
+                // 获取事件名
+                var eventName = obj.event;
+                switch (eventName) {
+                    case "getCheckData":
+                        var arr = checkStatus.data;
+                        layer.alert(JSON.stringify(arr));
+                        break;
+                    case "getCheckLength":
+                        var arr = checkStatus.data;
+                        layer.msg("选中了" + arr.length + "条数据！")
+                        break;
+                    case "isAll":
+                        var flag = checkStatus.isAll;
+                        var str = flag ? '全选' : '未全选';
+                        layer.msg(str);
+
+                        break;
+                    //若点击“新增”按钮，进入该事件，调用新增方法openAdd();
+                    case "insert":
+                        openAdd();
+
+                    default:
+                        break;
+                };
+            });
+            //行工具栏事件
+            table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+                if (layEvent === 'del') { //删除
+                    console.log(data);
+                    // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.confirm('确定删除竞赛：' + data.name + '?', function (index) {
+                        // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        console.log("删除的是", data.id)
+
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url: 'http://localhost:8888/item/delete',
+                            data: {
+                                id: data.id
+                            }, success(res) {
+                                getTableData();
+                                //     tableIns.reload();
+                                //     console.log("删除成功！")
+                                // },error:function(){
+                                //     alert("删除失败");
+                                if (res.data == null) {
+                                    layer.msg(res.msg, { icon: 4 });
+                                    return
+                                }
+
+                                layer.msg(res.msg, { icon: 1 });
+                            },
+                        })
+
+                    });
+                } else if (layEvent === 'edit') { //点击修改进入该事件，调用修改方法
+                    openUpdate(data);
+                    var obj = $("[name='id']").val();
+                }
+            });
+            function formatState(type) {
+                var type1;
+                if (type == 1) {
+                    type1 = "个人赛"
+                } else if (type == 2) {
+                    type1 = "团体赛"
+                }
+                return type1;
+            }
+            //统一定义接口变量名和弹出层变量名（方便监听提交表单和关闭弹出层使用）
+            var url;
+            var mainIndex;
+            //新增方法（函数）
+            function openAdd() {
+                //弹出层
+                mainIndex = layer.open({
+                    type: 1,
+                    title: '新增',
+                    content: $("#saveOrUpdateDiv"),
+                    area: ['600px', '400px'],
+                    success: function () {
+                        $("#dataFrm")[0].reset(); //清空表单数据（清除编辑表单回显的数据）
+                        url = "http://localhost:8888/item/insert";
+                    }
+                });
+            }
+
+
+            // 修改方法（函数）
+            function openUpdate(data) {
+                //弹出层
+                console.log("修改的值为data:", data)
+                mainIndex = layer.open({
+                    // type:1,
+                    // title:'编辑',
+                    content: $("#saveOrUpdateDiv"),
+                    // area:['600px','400px'],
+                    success: function (index) {
+                        form.val("dataFrm", data);//数据回显
+                        url = "http://localhost:8888/item/update";
+                    }
+                })
+            }
+
+            // 新增/编辑表单监听提交
+            form.on('submit(doSubmit)', function (obj) {
+                console.log("submit(doSubmit)")
+                console.log("点击了提交：" + JSON.stringify(obj.field))
+                var params = obj.field;
+                //打印获取到的表单参数和新增/编辑函数中设定的URL接口
+                // alert(params);
+                // alert(url);
+                url = "http://localhost:8888/item/insert";
+
+                //发送新增/编辑请求
+                $.post(url, params, function (data) {
+                    console.log("data", data)
+                    //关闭弹出层
+                    layer.close(mainIndex);
+                    //刷新表格
+                    tableIns.reload();
+                })
+
+
+                return true
+            });
+        });
+    </script>
+
+</body>
+
+</html>

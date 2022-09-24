@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="com.notfound.crm.sys.vo.EmployeeVO">
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="password" property="password" />
+    <result column="email" property="email" />
+    <result column="age" property="age" />
+    <result column="dept" property="dept" />
+    <result column="hireDate" property="hiredate" />
+    <result column="state" property="state" />
+    <result column="admin" property="admin" />
+    <result column="role" property="role" />
+    <result column="d_name" property="dname" />
+    <result column="r_name" property="rname" />
+<!--    <collection select="com.notfound.crm.sys.mapper.RoleMapper.queryByRoleId" column="id" property="roleList"/>  -->
+    </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, `password`, email, age, dept, hireDate, `state`, `admin`, `role`
+  </sql>
+
+  <!--    根据用户名称查询数据，这个sql是给shiro拿来做验证的-->
+  <select id="queryEmployeeByName" resultMap="BaseResultMap">
+    select * from employee where name = #{username}
+  </select>
+
+  <!--根据id查询-->
+  <select id="selectOne" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from employee
+    where id = #{id}
+  </select>
+
+   <select id="queryByIdList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from employee
+    where id in
+    <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
+  </select>
+
+<!--  &lt;!&ndash;给Role的外加SQL&ndash;&gt;-->
+<!--  <select id="queryByRoleId" resultMap="BaseResultMap">-->
+<!--    select-->
+<!--    e.id, e.`name`, e.`password`, e.email, e.age, e.dept, e.hireDate, e.`state`, e.`admin`, e.`role`-->
+<!--    from employee as e-->
+<!--    join employee_role as er on e.id=er.eid-->
+<!--    where er.rid=#{id}-->
+<!--  </select>-->
+
+  <!--分页以及模糊查询-->
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    e.id, e.`name`, e.`password`, e.email, e.age, e.dept, d.name as d_name, e.hireDate, e.`state`, e.`admin`, e.role, r.name as r_name
+    from employee as e inner join department as d on e.dept = d.id inner join role as r on e.role = r.id
+    <where>
+    <if test="keyword != null and keyword != ''">
+        and (e.name like concat("%",#{keyword},"%") or email like concat("%",#{keyword},"%"))
+    </if>
+    <if test="type != null and type != ''">
+        and dept = #{type}
+    </if>
+    </where>
+  </select>
+
+  <!--登录-->
+  <select id="login" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from employee
+    where name = #{name}
+  </select>
+
+  <!--根据id删除数据-->
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from employee
+    where id = #{id}
+  </delete>
+
+  <!--根据id删除数据-->
+  <delete id="deleteByIdList">
+    delete from employee
+    where id in
+    <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+    #{id}
+    </foreach>
+  </delete>
+
+  <!--批量插入-->
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.notfound.crm.sys.domain.Employee" useGeneratedKeys="true">
+    insert into employee (`name`, `password`, email,
+      age, dept, hireDate, 
+      `state`, `admin`, `role`)
+    values (#{name}, #{password}, #{email},
+      #{age}, #{dept}, #{hiredate},
+      #{state}, #{admin}, #{role})
+  </insert>
+  
+  <!--批量插入数据-->
+  <insert id="addBatch" parameterType="com.notfound.crm.sys.vo.EmployeeVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into employee (`name`, `password`, email,
+      age, dept, hireDate,
+      `state`, `admin`, `role`)
+    values (#{name}, #{password}, #{email},
+      #{age}, #{dept}, #{hiredate},
+      #{state}, #{admin}, #{role})
+  </insert>
+    
+  <!--选择插入-->
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.notfound.crm.sys.domain.Employee" useGeneratedKeys="true">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="hiredate != null">
+        hireDate,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="admin != null">
+        `admin`,
+      </if>
+      <if test="role != null">
+        `role`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name},
+      </if>
+      <if test="password != null">
+        #{password},
+      </if>
+      <if test="email != null">
+        #{email},
+      </if>
+      <if test="age != null">
+        #{age},
+      </if>
+      <if test="dept != null">
+        #{dept},
+      </if>
+      <if test="hiredate != null">
+        #{hiredate},
+      </if>
+      <if test="state != null">
+        #{state},
+      </if>
+      <if test="admin != null">
+        #{admin},
+      </if>
+      <if test="role != null">
+        #{role},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.notfound.crm.sys.domain.Employee">
+    update employee
+    <set>
+      <if test="name != null">
+        `name` = #{name},
+      </if>
+      <if test="password != null">
+        `password` = #{password},
+      </if>
+      <if test="email != null">
+        email = #{email},
+      </if>
+      <if test="age != null">
+        age = #{age},
+      </if>
+      <if test="dept != null">
+        dept = #{dept},
+      </if>
+      <if test="hiredate != null">
+        hireDate = #{hiredate},
+      </if>
+      <if test="state != null">
+        `state` = #{state},
+      </if>
+      <if test="admin != null">
+        `admin` = #{admin},
+      </if>
+      <if test="role != null">
+        `role` = #{role},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <!--修改数据  -->
+  <update id="update" parameterType="com.notfound.crm.sys.vo.EmployeeVO">
+    update employee
+    set `name` = #{name},
+      `password` = #{password},
+      email = #{email},
+      age = #{age},
+      dept = #{dept},
+      hireDate = #{hiredate},
+      `state` = #{state},
+      `admin` = #{admin},
+      `role` = #{role}
+    where id = #{id}
+  </update>
+
+  <!--    添加员工和角色角色关系表数据-->
+  <insert id="insertEmployeeAndRoleRelation">
+        insert into employee_role(eid,rid) values (#{eid},#{rid})
+  </insert>
+
+  <!--    删除员工和角色角色关系表数据-->
+  <delete id="deleteEmployeeAndRoleRelation">
+        delete from employee_role where eid=#{id}
+  </delete>
+
+   <!--    删除员工和角色角色关系表数据-->
+  <select id="queryPermissionList" resultType="java.lang.String" >
+        select expression from role_permissions as rp INNER JOIN permissions as p on rp.pid = p.id where rid=#{id}
+  </select>
+
+</mapper>

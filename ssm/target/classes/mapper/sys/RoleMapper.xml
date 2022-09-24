@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.notfound.crm.sys.vo.RoleVO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="sn" jdbcType="VARCHAR" property="sn" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="permission" jdbcType="VARCHAR" property="permission" />
+<!--        <collection select="com.notfound.crm.sys.mapper.EmployeeMapper.queryByRoleId" column="id" property="employeeList"/>-->
+        <collection select="com.notfound.crm.sys.mapper.PermissionsMapper.queryByRole" column="id" property="permissionsList"/>
+    </resultMap>
+
+    <!--    根据用户名称查询数据，这个sql是给shiro拿来做验证的-->
+    <select id="queryRoleByUserName" resultMap="BaseResultMap" resultSets="java.util.Set" resultType="string">
+        select role.name
+        from employee join employee_role on employee.id=employee_role.eid
+        join role on employee_role.rid=role.id
+        where employee.name=#{username}
+    </select>
+
+    <!--    查询所有角色数据-->
+    <select id="selectList" resultMap="BaseResultMap">
+        select id,name,sn,permission
+        from role
+    </select>
+
+    <!--    根据id查询角色-->
+    <select id="selectOne" resultMap="BaseResultMap">
+        select id,name,sn,permission
+        from role
+        where id=#{id,jdbcType=INTEGER}
+    </select>
+
+    <!--    增加角色数据-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into role(name,sn,permission) values (#{name},#{sn},#{permission})
+    </insert>
+
+    <!--删除角色信息-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from role where id=#{id}
+    </delete>
+
+    <!--修改角色信息-->
+    <update id="update" parameterType="com.notfound.crm.sys.domain.Role">
+        update role
+        <set>
+            <if test="name != null &amp;&amp; name != '' ">
+                name=#{name},
+            </if>
+            <if test="sn != null &amp;&amp; sn != '' ">
+                sn=#{sn},
+            </if>
+            <if test="permissions != null &amp;&amp; permissions != '' ">
+                permission=#{permissions.name}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--给Employee的外加SQL-->
+    <select id="queryByRoleId" resultMap="BaseResultMap">
+    select r.id,r.name,r.sn,r.permission
+    from role as r
+    join employee_role as er on r.id=er.rid
+    where er.eid=#{id}
+    </select>
+
+    <!--    添加角色和权限关系表数据-->
+    <insert id="insertRoleAndPermissionRelation">
+        insert into role_permissions(rid,pid) values (#{rid},#{pid})
+    </insert>
+
+    <!--    删除角色和权限关系表数据-->
+    <delete id="deleteRoleAndPermissionRelation">
+        delete from role_permissions where rid=#{id}
+    </delete>
+
+</mapper>

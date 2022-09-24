@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>登录页面</title>
+<link rel="stylesheet" href="../layui/css/layui.css">
+	<style type="text/css">
+	.container{
+		width: 420px;
+		height: 320px;
+		min-height: 320px;
+		max-height: 320p;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		margin: auto;
+		padding: 20px;
+		z-index: 130;
+		border-radius: 8px;
+		background-color: #fff;
+		box-shadow: 0 3px 18px rgba(100, 0, 0, .5);
+		font-size: 16px;
+	}
+	.close{
+		background-color: white;
+		border: none;
+		font-size: 18px;
+		margin-left: 410px;
+		margin-top: -10px;
+	}
+	.layui-input{
+		border-radius: 5px;
+		width: 300px;
+		height: 40px;
+		font-size: 15px;
+	}
+	.layui-form-item{
+		margin-left: -20px;
+	}
+	#logoid{ 
+		margin-top: -16px;
+		padding-left:150px; 
+		padding-bottom: 15p
+	}
+	.layui-btn{
+		margin-left: -50px;
+		border-radius: 5px;
+		width: 350px;
+		height: 40px;
+		font-size: 15px;
+	}
+	.verity{
+		width: 120px;
+	}
+	.font-set{
+		font-size: 13px;
+		text-decoration: none; 
+		margin-left: 120px;
+	}
+	a{
+	text-decoration: underline;
+	cursor: pointer; 
+	}
+	</style>
+</head>
+<body>
+	<form class="layui-form">
+		<div class="container">
+      <div style="margin: auto; width: 202px; height: 50px; text-align: center;">
+        <div class="layui-form-mid layui-word-aux">
+          <h2>学科竞赛管理系统</h2>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+          <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">密 &nbsp;&nbsp;码</label>
+        <div class="layui-input-inline">
+          <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">验证码</label>
+        <div class="layui-input-inline" style="width: 130px; margin: 0;">
+          <input type="text" name="securityCode" required  lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input verity">
+        </div>
+				<!-- <a onclick="getAuthCode" style="font-size:10px">获取验证码</a> -->
+        <img id="authCode" src="http://localhost:8888/sys/getAuthCode.do"/>
+        <a onclick="getAuthCode()" style="font-size:10px">看不清，换一张</a>
+      </div>
+
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="formDemo">登录</button>	     
+            </div>
+          </div>
+          <!-- <a href="" class="font-set">忘记密码?</a>  <a href="" class="font-set">立即注册</a> -->
+        </div>
+		</form>
+  </body>
+	<script src="..\layui\layui.js"></script>
+	<script src="..\js\jquery-1.9.1.min.js"></script>
+	<script>
+		function getAuthCode(){
+			$("#authCode").attr('src',"http://localhost:8888/sys/getAuthCode.do?"+new Date()); 
+		}
+
+		layui.use('form', function(){
+		var form = layui.form;
+
+		//监听提交
+		form.on('submit(formDemo)', function(data){
+			$.ajax({
+				type: "get",
+				url: "http://localhost:8888/sys/login",
+				xhrFields: {
+            		withCredentials: true
+				},
+				crossDomain: true,
+				data: data.field,
+				success(res){
+					layer.msg(res.msg)
+
+					if(res.code==200){
+						window.location.href= "crm_index.html"
+					}
+				},
+				error(res){
+					console.log("出现错误！")
+				}
+			})
+    	return false;
+		});
+	});
+	</script>
+</html>

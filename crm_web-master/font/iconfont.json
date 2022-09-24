@@ -1,0 +1,65 @@
+{
+  "id": "2524478",
+  "name": "crm_sys",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "845579",
+      "name": "圈",
+      "font_class": "quan",
+      "unicode": "e741",
+      "unicode_decimal": 59201
+    },
+    {
+      "icon_id": "741071",
+      "name": "数据文件",
+      "font_class": "shujuwenjian",
+      "unicode": "e856",
+      "unicode_decimal": 59478
+    },
+    {
+      "icon_id": "7257365",
+      "name": "系统管理",
+      "font_class": "xitongguanli",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "8085227",
+      "name": "同业客户管理",
+      "font_class": "ziyuan",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "12974860",
+      "name": "报表",
+      "font_class": "baobiao",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "16609736",
+      "name": "历史记录",
+      "font_class": "history",
+      "unicode": "e7a8",
+      "unicode_decimal": 59304
+    },
+    {
+      "icon_id": "6204098",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "16589958",
+      "name": "个人中心",
+      "font_class": "80gerenzhongxin",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    }
+  ]
+}

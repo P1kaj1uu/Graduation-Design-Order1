@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.DepartmentMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into department (id,sn,name)
+        values (#{id},#{sn},#{name});
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from department where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.notfound.crm.sys.domain.Department">
+        update department
+        <set>
+            <if test="sn != null and sn !=''">
+                sn = #{sn},
+            </if>
+            <if test="name != null and name !=''">
+                name =#{name}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <resultMap id="BaseDepartmentMap" type="com.notfound.crm.sys.vo.DepartmentVO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="sn" jdbcType="VARCHAR" property="sn" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseDepartmentMap" parameterType="com.notfound.crm.common.base.Query">
+        select id,sn,name
+        from department
+    </select>
+</mapper>

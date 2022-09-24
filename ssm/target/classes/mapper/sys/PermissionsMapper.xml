@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.PermissionsMapper">
+    <resultMap id="BaseResultMap" type="com.notfound.crm.sys.vo.PermissionsVO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="expression" jdbcType="VARCHAR" property="expression" />
+    </resultMap>
+
+    <!--    查询所有权限数据，这个sql是给shiro拿来做验证的-->
+    <select id="queryPermissionsByUsername" resultSets="java.util.Set" resultType="string">
+        select p.expression
+        from permissions as p
+        join role_permissions as rp on p.id = rp.pid
+        join role as r on rp.rid  = r.id
+        join employee_role  as er on er.rid=r.id
+        join employee as e on er.eid=e.id
+        where e.name=#{username}
+    </select>
+
+    <!--    查询所有权限-->
+    <select id="selectList" resultMap="BaseResultMap">
+        select id,name,expression from permissions
+    </select>
+
+    <!--    根据id查权限-->
+    <select id="selectOne" resultMap="BaseResultMap">
+        select id,name,expression from permissions where id=#{id}
+    </select>
+
+    <!--    给role的外SQL-->
+    <select id="queryByRole" resultMap="BaseResultMap">
+        select p.id,p.name,p.expression from permissions as p
+        join role_permissions  as rp on p.id=rp.pid
+        where rp.rid=#{id}
+    </select>
+
+    <!--    添加权限-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into permissions(name,expression) values (#{name},#{expression})
+    </insert>
+
+    <!--    删除权限-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from permissions where id=#{id}
+    </delete>
+
+    <!--    修改权限-->
+    <update id="update" parameterType="com.notfound.crm.sys.domain.Permissions">
+        update permissions
+        <set>
+            <if test="name != null and name != '' ">
+                name=#{name},
+            </if>
+            <if test="expression != null and expression != '' ">
+                expression=#{expression}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--    根据角色的权限名查询权限信息-->
+    <select id="queryPermissionByRolePermission">
+        select id,name,expression from permissions where name=#{role.permission}
+    </select>
+</mapper>

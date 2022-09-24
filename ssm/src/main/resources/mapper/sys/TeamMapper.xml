@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.TeamMapper">
+
+    <resultMap id="BaseTeamMap" type="com.notfound.crm.sys.vo.TeamVO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="ite" jdbcType="VARCHAR" property="ite" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="rankk" jdbcType="VARCHAR" property="rankk" />
+    </resultMap>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into team (id,ite,name,phone,rankk)
+        values (#{id},#{ite},#{name},#{phone},#{rankk})
+  </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from team where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.notfound.crm.sys.domain.Team">
+        update team
+        set rankk = #{rankk}
+        where id = #{id}
+    </update>
+    <select id="selectList" resultMap="BaseTeamMap">
+        select t.id,t.ite,t.name,t.phone,t.rankk,i.name as i_name from team as t inner join item as i on t.ite = i.id
+    </select>
+</mapper>

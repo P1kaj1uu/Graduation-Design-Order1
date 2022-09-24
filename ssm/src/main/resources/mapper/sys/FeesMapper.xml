@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.FeesMapper">
+
+    <resultMap id="BaseFeesMap" type="com.notfound.crm.sys.vo.FeesVO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="ite" jdbcType="VARCHAR" property="ite" />
+        <result column="enroll" jdbcType="DECIMAL" property="enroll" />
+        <result column="guide" jdbcType="DECIMAL" property="guide" />
+        <result column="other" jdbcType="DECIMAL" property="other" />
+        <result column="heji" jdbcType="DECIMAL" property="heji" />
+    </resultMap>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into fees (id,ite,enroll,guide,other,heji)
+        values (#{id},#{ite},#{enroll},#{guide},#{other},#{heji})
+  </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from fees where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.notfound.crm.sys.domain.Fees">
+        update fees
+        <set>
+            <if test="ite != null and ite !=''">
+                ite =#{ite}
+            </if>
+            <if test="enroll != null and enroll !=''">
+                enroll = #{enroll},
+            </if>
+            <if test="guide != null and guide !=''">
+                guide = #{guide},
+            </if>
+            <if test="other != null and other !=''">
+                other = #{other}
+            </if>
+            <if test="heji != null and heji !=''">
+                heji = #{heji}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="selectList" resultMap="BaseFeesMap">
+        select f.id,f.ite,f.enroll,f.guide,f.other,f.heji,i.name as i_name from fees as f inner join item as i on f.ite = i.id
+    </select>
+
+    <select id="heji" resultMap="BaseFeesMap">
+        select enroll+guide+other as heji from fees
+    </select>
+
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.notfound.crm.sys.mapper.PersonalMapper">
+
+    <resultMap id="BasePersonalMap" type="com.notfound.crm.sys.vo.PersonalVO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="ite" jdbcType="VARCHAR" property="ite" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="clas" jdbcType="VARCHAR" property="clas" />
+        <result column="major" jdbcType="VARCHAR" property="major" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="rankk" jdbcType="VARCHAR" property="rankk" />
+    </resultMap>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into personal (id,ite,name,clas,major,phone,rankk)
+        values (#{id},#{ite},#{name},#{clas},#{major},#{phone},#{rankk})
+  </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from personal where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.notfound.crm.sys.domain.Personal">
+        update personal
+        set
+                rankk = #{rankk}
+        where id = #{id}
+    </update>
+    <select id="selectList" resultMap="BasePersonalMap">
+        select p.id,p.ite,p.name,p.clas,p.major,p.phone,p.rankk,i.name as i_name from personal as p inner join item as i on p.ite = i.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (p.name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </select>
+</mapper>

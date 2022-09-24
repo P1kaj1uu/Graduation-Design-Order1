@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>导航栏</title>
+  <link rel="stylesheet" href="../layui/css/layui.css">
+  <link rel="stylesheet" href="..\font\iconfont.css">
+  <script src="..\js\jquery-1.9.1.min.js"></script>
+  <!-- <style>
+    .leftMenu {
+        display: none;
+    }
+  </style> -->
+</head>
+<body>
+  <div class="layui-layout layui-layout-admin">
+    <div class="layui-side layui-bg-black" style="top: 0px;">
+      <div class="layui-side-scroll">
+        <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+          <div  id="sysManage" class="hide">
+          
+          <li class="layui-nav-item ">
+            <a class="" href="javascript:;"><i class="iconfont">&#xe620; </i>系统管理</a>
+            <dl class="layui-nav-child">
+              <dd><a href="SysManage/departmentManage.html" target="main"><i class="iconfont">&#xe741; </i>部门管理</a></dd>
+              <dd><a href="SysManage/StaffManage.html" target="main"><i class="iconfont">&#xe741; </i>用户管理</a></dd>
+              <!-- <dd><a href="SysManage/PermissionManage.html" target="main"><i class="iconfont">&#xe741; </i>权限管理</a></dd>-->
+              <dd><a href="SysManage/RoleManage.html" target="main"><i class="iconfont">&#xe741; </i>角色管理</a></dd> 
+              <dd><a href="SysManage/shen.html" target="main"><i class="iconfont">&#xe741; </i>立项审核</a></dd>
+              <dd><a href="SysManage/lixiang.html" target="main"><i class="iconfont">&#xe741; </i>立项管理</a></dd>
+              <dd><a href="SysManage/fees.html" target="main"><i class="iconfont">&#xe741; </i>经费管理</a></dd>
+              <dd><a href="SysManage/pshen.html" target="main"><i class="iconfont">&#xe741; </i>个人结题</a></dd>
+              <dd><a href="SysManage/tshen.html" target="main"><i class="iconfont">&#xe741; </i>团体结题</a></dd>
+            </dl>
+          </li>
+
+        </div>
+          <li class="layui-nav-item ">
+            <a class="" href="javascript:;"><i class="iconfont">&#xe620; </i>项目管理</a>
+            <dl class="layui-nav-child">
+              <dd><a href="ItemManage/item.html" target="main"><i class="iconfont">&#xe741; </i>竞赛信息</a></dd>
+              
+            </dl>
+          </li>
+
+          <li class="layui-nav-item ">
+            <a class="" href="javascript:;"><i class="iconfont">&#xe620; </i>报名管理</a>
+            <dl class="layui-nav-child">
+              <dd><a href="JoinManage/personal.html" target="main"><i class="iconfont">&#xe741; </i>个人赛报名</a></dd>
+              <dd><a href="JoinManage/team.html" target="main"><i class="iconfont">&#xe741; </i>团体赛报名</a></dd>
+            </dl>
+          </li>
+
+          <li class="layui-nav-item ">
+            <a class="" href="javascript:;"><i class="iconfont">&#xe620; </i>结题管理</a>
+            <dl class="layui-nav-child">
+              <dd><a href="JietiManage/pjie.html" target="main"><i class="iconfont">&#xe741; </i>个人结题信息</a></dd>
+              <dd><a href="JietiManage/tjie.html" target="main"><i class="iconfont">&#xe741; </i>团体结题信息</a></dd>
+            </dl>
+          </li>
+
+          <li class="layui-nav-item " style="visibility: hidden;">
+            <a class="" href="javascript:;"><i class="iconfont">&#xe620; </i>首页</a>
+            <dl class="layui-nav-child">
+              <dd><a href="ItemManage/welcome.html" target="main" ><i class="iconfont">&#xe741; </i>首页</a></dd>
+            </dl>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="../layui/layui.js"></script>
+<script>
+//JavaScript代码区域
+layui.use('element', function(){
+  var element = layui.element;
+});
+
+$.ajaxSetup({
+    // 发送cookie
+    xhrFields: {
+      withCredentials: true
+    }
+});
+
+$.ajax({
+  type: "get",
+  url: 'http://localhost:8888/sys/checkAdmin',
+  success:function(res){
+    if(res){
+      $('#sysManage').removeClass('hide');
+      // $('#authCode').removeClass('hide')
+    }
+  }
+});
+
+</script>
+<style>
+  .hide{
+    display: none;
+  }
+</style>
+</html>
